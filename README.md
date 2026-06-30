@@ -1,4 +1,4 @@
-﻿# VoiceFlow
+# VoiceFlow
 
 **Free, private, offline voice typing for your desktop â€” a local Wispr Flow clone.**
 
