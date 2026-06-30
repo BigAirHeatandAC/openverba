@@ -118,3 +118,113 @@ jobs:
           # Mark as a draft=false, prerelease auto-detected from the tag name
           # (e.g. v1.0.0-rc1). Edit here if you want manual review before publish.
           fail_on_unmatched_files: true
+
+  # ===========================================================================
+  # macOS leg -- BETA. Builds an UNSIGNED .app -> .dmg on a native macOS runner.
+  # The macOS backend (pyobjc/pynput) is implemented but not yet hardware-tested,
+  # and the .dmg is NOT codesigned/notarized (Gatekeeper will warn). Independent
+  # of the Windows job: if this fails, the Windows release still publishes.
+  # ===========================================================================
+  build-macos:
+    name: Build macOS app (.dmg, unsigned beta)
+    runs-on: macos-13          # Intel build; also runs on Apple Silicon via Rosetta
+    continue-on-error: true    # beta leg must never block the Windows release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install macOS runtime deps + PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-macos.txt pyinstaller
+          pip install -e .
+
+      - name: Resolve app version
+        id: ver
+        run: echo "version=$(python -c 'import voiceflow,sys; sys.stdout.write(voiceflow.__version__)')" >> "$GITHUB_OUTPUT"
+
+      - name: Build .app with PyInstaller (BUNDLE)
+        run: python -m PyInstaller --noconfirm --clean packaging/voiceflow.spec
+
+      - name: Sanity-check the .app exists
+        run: test -d "dist/VoiceFlow.app" || (echo "PyInstaller did not produce dist/VoiceFlow.app" && exit 1)
+
+      - name: Package unsigned .dmg
+        run: hdiutil create -volname "OpenVerba" -srcfolder "dist/VoiceFlow.app" -ov -format UDZO "dist/OpenVerba-${{ steps.ver.outputs.version }}-macOS.dmg"
+
+      - name: Upload .dmg as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenVerba-macOS
+          path: dist/OpenVerba-*-macOS.dmg
+          if-no-files-found: error
+
+      - name: Publish to GitHub Release (tag only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/OpenVerba-*-macOS.dmg
+          fail_on_unmatched_files: true
+
+  # ===========================================================================
+  # Linux leg -- BETA. Builds a portable AppImage on the OLDEST supported glibc
+  # (ubuntu-22.04; PyInstaller Linux binaries are glibc-forward-compatible only).
+  # The Linux backend (evdev/pynput + xclip/ydotool) is implemented but not yet
+  # hardware-tested. Independent of the Windows job.
+  # ===========================================================================
+  build-linux:
+    name: Build Linux AppImage (beta)
+    runs-on: ubuntu-22.04
+    continue-on-error: true    # beta leg must never block the Windows release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system libraries (FUSE for AppImage, Tk for the GUI)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 python3-tk
+
+      - name: Install Linux runtime deps + PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-linux.txt pyinstaller
+          pip install -e .
+
+      - name: Resolve app version
+        id: ver
+        run: echo "version=$(python -c 'import voiceflow,sys; sys.stdout.write(voiceflow.__version__)')" >> "$GITHUB_OUTPUT"
+
+      - name: Build onedir with PyInstaller
+        run: python -m PyInstaller --noconfirm --clean packaging/voiceflow.spec
+
+      - name: Sanity-check the onedir exists
+        run: test -f "dist/VoiceFlow/VoiceFlow" || (echo "PyInstaller did not produce dist/VoiceFlow/VoiceFlow" && exit 1)
+
+      - name: Build AppImage
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"     # appimagetool can't mount FUSE on CI
+          APP_VERSION: ${{ steps.ver.outputs.version }}
+        run: bash packaging/linux/build_appimage.sh
+
+      - name: Upload AppImage as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenVerba-Linux-AppImage
+          path: dist/*.AppImage
+          if-no-files-found: error
+
+      - name: Publish to GitHub Release (tag only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.AppImage
+          fail_on_unmatched_files: true

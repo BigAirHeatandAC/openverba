@@ -1,0 +1,27 @@
+# OpenVerba — Linux build/runtime deps (CI: build-linux job).
+#
+# The cross-platform core (same pins as requirements.txt) MINUS the Windows-only
+# stack (pywin32 / keyboard / mouse), PLUS the Linux input/paste backend deps.
+# The synthetic-paste + clipboard CLI tools (xclip / xdotool / wl-clipboard /
+# ydotool / wtype) are external binaries resolved from PATH at runtime, not pip
+# packages, so they are NOT listed here.
+
+# --- cross-platform core (speech + audio + GUI) ---
+faster-whisper==1.2.1
+ctranslate2==4.8.0
+huggingface_hub==1.19.0
+tokenizers==0.23.1
+av==17.1.0
+onnxruntime==1.26.0
+numpy==2.4.6
+sounddevice==0.5.5
+pyperclip==1.11.0
+customtkinter==5.2.2
+darkdetect==0.8.0
+pystray==0.19.5
+pillow==12.2.0
+
+# --- Linux input / hotkey / tray backend ---
+evdev>=1.6            # global hotkeys + mouse via /dev/input
+pynput>=1.7           # X11 fallback hotkeys / synthetic input
+python-xlib>=0.33     # pystray._xorg tray backend + pynput X11
