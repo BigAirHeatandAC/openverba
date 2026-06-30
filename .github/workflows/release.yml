@@ -127,7 +127,7 @@ jobs:
   # ===========================================================================
   build-macos:
     name: Build macOS app (.dmg, unsigned beta)
-    runs-on: macos-13          # Intel build; also runs on Apple Silicon via Rosetta
+    runs-on: macos-latest      # Apple Silicon (arm64) — current GitHub image
     continue-on-error: true    # beta leg must never block the Windows release
     steps:
       - uses: actions/checkout@v4
