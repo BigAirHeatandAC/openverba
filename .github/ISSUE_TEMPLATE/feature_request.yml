@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest an idea or improvement for VoiceFlow
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: What are you trying to do that VoiceFlow makes hard today?
+      placeholder: I want dictation to insert text live as I speak...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What you'd like to see happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds or other approaches you've thought about.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Platforms this matters for
+      options:
+        - label: Windows
+        - label: macOS
+        - label: Linux

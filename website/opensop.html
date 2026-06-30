@@ -1,0 +1,527 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenSOP â€” Record a task once, get an illustrated training guide (free, Windows)</title>
+  <meta name="description" content="OpenSOP is a free Windows app that turns one screen recording into a polished, illustrated step-by-step training PDF. Click and talk through a task once â€” it captures every click, your narration and your typing, then an AI writes a clean numbered guide. Runs 100% locally with a private AI, or bring your own key. A Scribe/Tango clone you fully own." />
+  <meta name="theme-color" content="#050506" />
+  <link rel="canonical" href="https://openverba.com/opensop" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="OpenVerba" />
+  <meta property="og:url" content="https://openverba.com/opensop" />
+  <meta property="og:title" content="OpenSOP â€” Record a task once, get an illustrated training guide" />
+  <meta property="og:description" content="Click and talk through a task once. OpenSOP writes a clean, illustrated step-by-step training PDF â€” automatically. 100% local AI or your own key. Free for Windows." />
+  <!-- Reuses the existing OpenVerba social card until a dedicated OpenSOP card is made. -->
+  <meta property="og:image" content="https://openverba.com/assets/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="OpenSOP â€” turn any task into a training guide" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OpenSOP â€” Record a task once, get an illustrated training guide" />
+  <meta name="twitter:description" content="Click and talk through a task once. OpenSOP writes a clean, illustrated step-by-step training PDF â€” automatically. Free for Windows." />
+  <meta name="twitter:image" content="https://openverba.com/assets/og-card.png" />
+
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <!-- Scoped extras for the OpenSOP mockups only -->
+  <link rel="stylesheet" href="/opensop.css" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenSOP",
+    "description": "Free Windows app that turns a single screen recording into a polished, illustrated step-by-step training PDF. Record a task once while clicking and talking; an AI writes a clean numbered guide. Runs 100% locally with a private vision model, or with your own Anthropic Claude API key.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Windows 10, Windows 11",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Is OpenSOP free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. OpenSOP is free for Windows. If you use the built-in local AI it costs nothing per guide â€” there's no account and no subscription. The only optional cost is if you choose to bring your own Anthropic Claude API key for cloud mode, which is a few cents per guide." } },
+      { "@type": "Question", "name": "Does my recording or data leave my PC?", "acceptedAnswer": { "@type": "Answer", "text": "Not in local mode. The screenshots, your narration and your typing are processed on your own machine â€” transcription runs locally with faster-whisper and the guide is written by a local vision model via Ollama. Nothing is uploaded. Only if you opt into cloud mode are screenshots and text sent to Anthropic's Claude API to write the guide." } },
+      { "@type": "Question", "name": "What do I need to run it?", "acceptedAnswer": { "@type": "Answer", "text": "Windows 10 or 11 and a microphone. For free local AI you install Ollama with a vision model (such as Qwen2.5-VL); a GPU makes it faster but isn't required. Alternatively, supply an Anthropic Claude API key and you don't need a local model at all." } },
+      { "@type": "Question", "name": "Local AI or cloud AI â€” which should I use?", "acceptedAnswer": { "@type": "Answer", "text": "OpenSOP auto-detects: if a local model is installed it uses that â€” free, private and offline. If not, and you've added a Claude API key, it uses cloud mode for top-tier quality at a few cents per guide. You're always in control of which one runs." } },
+      { "@type": "Question", "name": "Can I edit the guide after recording?", "acceptedAnswer": { "@type": "Answer", "text": "Yes â€” by talking to it. On the Done screen you type or speak changes like 'drop the steps where I fumbled the search bar' or 'combine steps 3 and 4', and OpenSOP rewrites the PDF from the same recording. No re-recording needed." } },
+      { "@type": "Question", "name": "Is OpenSOP Windows only?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, OpenSOP is a Windows 10/11 desktop app today, like its sibling OpenVerba." } }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ===================== NAV ===================== -->
+  <header class="nav" id="top">
+    <div class="container nav__inner">
+      <a class="brand" href="/" aria-label="OpenVerba home">
+        <img class="brand__logo" src="/assets/logo.svg" alt="" width="32" height="32" />
+        <span class="brand__name">Open<span class="brand__accent">Verba</span></span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="/index.html#how">How it works</a>
+        <a href="/index.html#features">Features</a>
+        <a href="/index.html#edit">Editing</a>
+        <a href="/index.html#local">Local model</a>
+        <a href="/index.html#faq">FAQ</a>
+        <a href="/opensop" aria-current="page">OpenSOP</a>
+      </nav>
+      <div class="nav__actions">
+        <a class="btn btn--ghost btn--sm nav__github" href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn--primary btn--sm" href="download/OpenSOP-Setup-1.0.0.exe" download>Download</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu" role="region" aria-label="Mobile navigation" hidden>
+      <a href="/index.html#how">How it works</a>
+      <a href="/index.html#features">Features</a>
+      <a href="/index.html#edit">Editing</a>
+      <a href="/index.html#local">Local model</a>
+      <a href="/index.html#faq">FAQ</a>
+      <a href="/opensop" aria-current="page">OpenSOP</a>
+      <a class="btn btn--primary" href="download/OpenSOP-Setup-1.0.0.exe" download>Download for Windows</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <span class="pill">
+          <span class="pill__dot"></span> Free Â· 100% local AI option Â· from the makers of OpenVerba
+        </span>
+        <h1 class="hero__title">
+          Record a task once.<br />
+          Get a <span class="grad-text">training guide.</span>
+        </h1>
+        <p class="hero__sub">
+          OpenSOP watches you do something on your computer â€” clicking and talking the whole way â€”
+          and automatically writes a clean, <strong>illustrated step-by-step PDF</strong>. Every click is
+          captured with a screenshot and a red numbered marker, your voice becomes the instructions,
+          and it all happens <strong>on your own PC</strong>.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary btn--lg" href="download/OpenSOP-Setup-1.0.0.exe" download>Download for Windows</a>
+          <a class="btn btn--ghost btn--lg" href="#how">See how it works</a>
+        </div>
+        <p class="hero__micro">Free Â· Windows 10 &amp; 11 Â· No account Â· Local-first &amp; private</p>
+
+        <!-- Recording-bar mockup (pure CSS â€” not a real screenshot) -->
+        <div class="recbar" aria-hidden="true">
+          <span class="recbar__rec"><span class="recbar__pulse"></span> Recording</span>
+          <span class="recbar__time">00:42</span>
+          <span class="recbar__wave">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </span>
+          <span class="recbar__keys">
+            <kbd class="kbd">Ctrl+Alt+R</kbd>
+            <kbd class="kbd">Ctrl+Alt+P</kbd>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TRUST STRIP ===================== -->
+    <section class="strip">
+      <div class="container strip__inner">
+        <div class="strip__item"><span class="strip__num">1</span><span class="strip__lbl">recording â†’ a full guide</span></div>
+        <div class="strip__item"><span class="strip__num">$0</span><span class="strip__lbl">free with local AI</span></div>
+        <div class="strip__item"><span class="strip__num">0</span><span class="strip__lbl">screenshots sent to the cloud*</span></div>
+        <div class="strip__item"><span class="strip__num">PDF</span><span class="strip__lbl">ready to email or text</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="section" id="how">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">How it works</span>
+          <h2 class="section__title">From a screen recording to a polished guide.</h2>
+          <p class="section__lede">
+            You do the task one time. OpenSOP handles the screenshots, the writing, the numbering
+            and the layout â€” and lets you fix anything just by talking to it.
+          </p>
+        </div>
+        <ol class="steps steps--4">
+          <li class="step">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Record once</h3>
+            <p class="step__text">
+              Press <code>Ctrl+Alt+R</code> and do the task while you narrate it. OpenSOP captures
+              every click â€” with a screenshot and a red numbered circle on the exact spot â€” plus
+              your voice and what you type.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step__num">2</span>
+            <h3 class="step__title">It writes the guide</h3>
+            <p class="step__text">
+              An AI cleans up the recording, drops the fumbles, merges tiny steps, and writes a
+              friendly numbered guide â€” then renders a clean PDF. Your spoken words are treated as
+              the source of truth for what you meant.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step__num">3</span>
+            <h3 class="step__title">Edit by voice</h3>
+            <p class="step__text">
+              On the Done screen, type or <strong>speak</strong> changes â€” "drop the search-bar fumble",
+              "combine steps 3 and 4" â€” and it rewrites the PDF from the same recording. No re-recording.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step__num">4</span>
+            <h3 class="step__title">Send the PDF</h3>
+            <p class="step__text">
+              Finished guides land in your <strong>OpenSOP Guides</strong> folder, ready to email or
+              text to whoever needs to learn the task.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== THE GUIDE (mockup) ===================== -->
+    <section class="section section--alt" id="guide">
+      <div class="container">
+        <div class="split">
+          <div class="split__copy">
+            <span class="eyebrow">What you get</span>
+            <h2 class="section__title">A guide that looks like you spent <span class="grad-text">hours</span> on it.</h2>
+            <p class="section__lede">
+              Numbered steps, plain-English instructions written from your narration, and a captioned
+              screenshot for each click with a red marker on exactly where to press.
+            </p>
+            <ul class="checklist">
+              <li><strong>One screenshot per real step.</strong> The red numbered circle lands on the exact control you clicked â€” no guessing.</li>
+              <li><strong>Written like a human wrote it.</strong> Friendly, numbered, skimmable â€” built from what you actually said.</li>
+              <li><strong>Auto-cleaned.</strong> Dead-end clicks and fumbles are dropped; tiny steps are merged.</li>
+              <li><strong>Share-ready PDF.</strong> Clean, on-brand layout that's ready to email or text the moment it's done.</li>
+            </ul>
+          </div>
+
+          <!-- Sample guide / PDF card (pure CSS mockup â€” not a real document) -->
+          <div class="guidecard" aria-hidden="true">
+            <div class="guidecard__bar">
+              <span class="guidecard__dot"></span><span class="guidecard__dot"></span><span class="guidecard__dot"></span>
+              <span class="guidecard__file">How to add a new customer.pdf</span>
+            </div>
+            <div class="guidecard__page">
+              <div class="guidecard__doctitle">How to add a new customer</div>
+              <div class="guidecard__docmeta">7 steps Â· created by OpenSOP Â· 2 min read</div>
+              <div class="guidecard__rule"></div>
+
+              <div class="gstep">
+                <span class="gstep__num">1</span>
+                <div class="gstep__body">
+                  <p class="gstep__text">Open the dashboard and click <b>New Customer</b> in the top-right corner.</p>
+                  <div class="gshot">
+                    <div class="gshot__chrome"><i></i><i></i><i></i></div>
+                    <div class="gshot__skeleton"><span></span><span></span><span></span></div>
+                    <span class="gshot__marker">1</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gstep">
+                <span class="gstep__num">2</span>
+                <div class="gstep__body">
+                  <p class="gstep__text">Type the customer's name and phone number into the form, then click <b>Save</b>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Features</span>
+          <h2 class="section__title">Everything you need to teach a task once.</h2>
+          <p class="section__lede">
+            A focused, local-first SOP recorder â€” a Scribe/Tango-style guide maker you fully own.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">âºï¸</div>
+            <h3 class="card__title">Record once, get a guide</h3>
+            <p class="card__text">
+              Capture every click (with a screenshot and a red numbered marker), your voice, and
+              your typing â€” then OpenSOP writes the whole guide and renders the PDF for you.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸ§¹</div>
+            <h3 class="card__title">Auto-cleanup</h3>
+            <p class="card__text">
+              It drops fumbling and dead-end clicks, merges tiny steps, and treats your spoken
+              words as the source of truth for what you actually meant to do.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸ—£ï¸</div>
+            <h3 class="card__title">Talk-to-it revisions</h3>
+            <p class="card__text">
+              On the Done screen, type or speak changes â€” "combine steps 3 and 4", "drop the
+              fumble" â€” and it rewrites the PDF from the same recording. No re-recording.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸ”’</div>
+            <h3 class="card__title">Local &amp; private by default</h3>
+            <p class="card__text">
+              The AI that writes the guide can run 100% locally via Ollama â€” no account, no cloud,
+              no per-guide cost, nothing leaves your machine.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">â˜ï¸</div>
+            <h3 class="card__title">Bring your own key (optional)</h3>
+            <p class="card__text">
+              Prefer top-tier quality? Add your Anthropic Claude API key for cloud mode at a few
+              cents per guide. OpenSOP auto-detects: local if installed, else cloud.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸŽ™ï¸</div>
+            <h3 class="card__title">Local transcription</h3>
+            <p class="card__text">
+              Your narration is transcribed on your own GPU or CPU with faster-whisper â€” the same
+              engine family that powers OpenVerba.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">âŒ¨ï¸</div>
+            <h3 class="card__title">Simple hotkeys</h3>
+            <p class="card__text">
+              <code>Ctrl+Alt+R</code> to start or stop, <code>Ctrl+Alt+P</code> to pause. Record
+              without hunting for buttons mid-task.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸ“„</div>
+            <h3 class="card__title">Clean, share-ready PDFs</h3>
+            <p class="card__text">
+              Finished guides land in an "OpenSOP Guides" folder as polished PDFs â€” ready to email
+              or text the moment they're done.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸªŸ</div>
+            <h3 class="card__title">Built for Windows</h3>
+            <p class="card__text">
+              A native Windows 10/11 desktop app, privacy-first and local-first â€” the same ethos as
+              its sibling, OpenVerba.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">ðŸ’š</div>
+            <h3 class="card__title">Free</h3>
+            <p class="card__text">
+              No account, no trial, no subscription. Use the local AI and it costs nothing per
+              guide â€” ever.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FREE & PRIVATE â€” LOCAL vs CLOUD ===================== -->
+    <section class="section section--alt" id="private">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Free &amp; private</span>
+          <h2 class="section__title">Local AI on <span class="grad-text">your</span> PC â€” or your own key.</h2>
+          <p class="section__lede">
+            Like OpenVerba, OpenSOP is local-first. The AI that writes your guide can run entirely
+            on your machine. Want the highest quality instead? Bring your own Claude key. It
+            auto-detects which to use.
+          </p>
+        </div>
+        <div class="modes">
+          <div class="mode mode--featured">
+            <span class="mode__tag">Local Â· default</span>
+            <h3 class="mode__title">Run it all on your machine</h3>
+            <p class="mode__price"><b>$0 per guide</b> Â· no account Â· works offline</p>
+            <ul>
+              <li><strong>Private:</strong> screenshots, narration and typing never leave your PC.</li>
+              <li><strong>Free forever:</strong> a local vision model (e.g. Qwen2.5-VL) via Ollama writes the guide.</li>
+              <li><strong>Local transcription:</strong> faster-whisper on your GPU or CPU.</li>
+              <li><strong>No limits:</strong> make as many guides as you want at no cost.</li>
+            </ul>
+          </div>
+          <div class="mode">
+            <span class="mode__tag">Cloud Â· optional</span>
+            <h3 class="mode__title">Bring your own Claude key</h3>
+            <p class="mode__price"><b>~a few cents per guide</b> Â· top-tier quality</p>
+            <ul>
+              <li><strong>Best writing quality</strong> for tricky or polished guides.</li>
+              <li><strong>Your key, your account:</strong> billed directly by Anthropic.</li>
+              <li><strong>No local model needed</strong> â€” handy on lightweight machines.</li>
+              <li><strong>Auto-detect:</strong> uses local if installed, else falls back to cloud.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== REQUIREMENTS ===================== -->
+    <section class="section" id="requirements">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Requirements</span>
+          <h2 class="section__title">What you need to run it</h2>
+        </div>
+        <div class="grid grid--3">
+          <article class="card card--mini">
+            <h3 class="card__title">Windows 10 or 11</h3>
+            <p class="card__text">A native Windows desktop app. (Same platform as OpenVerba.)</p>
+          </article>
+          <article class="card card--mini">
+            <h3 class="card__title">A microphone</h3>
+            <p class="card__text">Any mic Windows recognizes â€” built-in, USB, or headset â€” so you can narrate the task.</p>
+          </article>
+          <article class="card card--mini">
+            <h3 class="card__title">Local AI <em>or</em> a Claude key</h3>
+            <p class="card__text">Install Ollama with a vision model for free local mode (a GPU helps), or add an Anthropic Claude API key for cloud mode.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section section--alt" id="faq">
+      <div class="container container--narrow">
+        <div class="section__head">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="section__title">Questions, answered</h2>
+        </div>
+        <div class="faq">
+          <details class="faq__item">
+            <summary>Is OpenSOP free?</summary>
+            <p>Yes. OpenSOP is free for Windows. If you use the built-in local AI it costs nothing per guide â€” there's no account and no subscription. The only optional cost is if you choose to bring your own Anthropic Claude API key for cloud mode, which is a few cents per guide.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Does my recording or data leave my PC?</summary>
+            <p>Not in local mode. The screenshots, your narration and your typing are processed on your own machine â€” transcription runs locally with faster-whisper and the guide is written by a local vision model via Ollama. Nothing is uploaded. Only if you opt into cloud mode are screenshots and text sent to Anthropic's Claude API to write the guide.</p>
+          </details>
+          <details class="faq__item">
+            <summary>What do I need to run it?</summary>
+            <p>Windows 10 or 11 and a microphone. For free local AI you install Ollama with a vision model (such as Qwen2.5-VL); a GPU makes it faster but isn't required. Alternatively, supply an Anthropic Claude API key and you don't need a local model at all.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Local AI or cloud AI â€” which should I use?</summary>
+            <p>OpenSOP auto-detects: if a local model is installed it uses that â€” free, private and offline. If not, and you've added a Claude API key, it uses cloud mode for top-tier quality at a few cents per guide. You're always in control of which one runs.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Can I edit the guide after recording?</summary>
+            <p>Yes â€” by talking to it. On the Done screen you type or speak changes like "drop the steps where I fumbled the search bar" or "combine steps 3 and 4", and OpenSOP rewrites the PDF from the same recording. No re-recording needed.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Is OpenSOP Windows only?</summary>
+            <p>Yes, OpenSOP is a Windows 10/11 desktop app today, like its sibling OpenVerba.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== EARLY ACCESS / CTA ===================== -->
+    <section class="cta" id="download">
+      <div class="container cta__inner">
+        <div class="cta__glow" aria-hidden="true"></div>
+        <h2 class="cta__title">Turn your next task into a guide.</h2>
+        <p class="cta__sub">
+          Free for Windows 10 &amp; 11. Record once, get a polished training PDF â€” and with the
+          local-AI option it all runs on your own PC, no account and no per-guide cost.
+        </p>
+        <div class="cta__buttons">
+          <a class="btn btn--primary btn--lg" href="download/OpenSOP-Setup-1.0.0.exe" download>Download for Windows</a>
+          <a class="btn btn--ghost btn--lg" href="#how">See how it works</a>
+        </div>
+        <p class="cta__note">Free Â· Windows 10 &amp; 11 Â· ~76 MB Â· Local-first Â· No account required</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a class="brand" href="/" aria-label="OpenVerba home">
+          <img class="brand__logo" src="/assets/logo.svg" alt="" width="28" height="28" />
+          <span class="brand__name">Open<span class="brand__accent">Verba</span></span>
+        </a>
+        <p class="footer__tag">Free, private, local-first tools for Windows. OpenVerba dictates; OpenSOP documents.</p>
+      </div>
+      <nav class="footer__cols" aria-label="Footer">
+        <div class="footer__col">
+          <span class="footer__h">OpenSOP</span>
+          <a href="#how">How it works</a>
+          <a href="#features">Features</a>
+          <a href="#private">Free &amp; private</a>
+          <a href="#faq">FAQ</a>
+          <a href="#download">Download</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__h">OpenVerba</span>
+          <a href="/index.html#how">How it works</a>
+          <a href="/index.html#features">Features</a>
+          <a href="/index.html#download">Download</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__h">Open source</span>
+          <a href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/BigAirHeatandAC/openverba/releases" target="_blank" rel="noopener">Releases</a>
+          <a href="https://github.com/BigAirHeatandAC/openverba/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer__bottom">
+      <span>Â© 2026 OpenVerba Â· OpenSOP</span>
+      <nav class="footer__legal" aria-label="Legal">
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/accessibility.html">Accessibility</a>
+        <a href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+  <script>
+    /* OpenSOP installer â€” LIVE. The hero/nav/CTA "Download for Windows" buttons
+       point at this file. Bump the version here and in those hrefs when you ship
+       a new build (and drop the new .exe in /download). */
+    window.OPENSOP_INSTALLER_URL = "download/OpenSOP-Setup-1.0.0.exe";
+  </script>
+</body>
+</html>

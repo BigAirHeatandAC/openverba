@@ -1,0 +1,126 @@
+# =============================================================================
+# VoiceFlow CI -- run the test suite on Windows, macOS and Linux automatically.
+#
+# WHY THIS EXISTS
+# ---------------
+# The app is developed on one Windows 11 box, but it is meant to run on three
+# desktop OSes. This workflow lets GitHub's hosted runners prove the code at
+# least IMPORTS and PASSES ITS UNIT TESTS on macOS and Linux too -- catching
+# "works on my machine" breakage before a release, without needing a Mac or a
+# Linux box on hand.
+#
+# HONEST LIMITS (read this before trusting a green check):
+#   * GitHub's hosted runners are CPU-ONLY -- there is NO NVIDIA GPU. So CI
+#     verifies the CPU transcription path, imports, and the pure logic; it can
+#     NEVER exercise the CUDA/GPU path (voiceflow.cuda / GPU faster-whisper).
+#     GPU has to be smoke-tested by hand on a real NVIDIA machine.
+#   * The whole suite is designed to be OS-agnostic: every OS side effect
+#     (mic, clipboard, global hotkeys/mouse hooks, the model download, CUDA)
+#     is MOCKED in tests/conftest.py. So a green run means "the logic is sound
+#     on this OS", NOT "a real microphone/hotkey/paste was driven end-to-end".
+#   * The Windows low-level-hook tests (tests/test_multichord.py,
+#     tests/test_taphold.py) self-skip off Windows (`if sys.platform != "win32"`),
+#     so the macOS/Linux legs run a SUBSET. The Windows leg is the only one that
+#     runs the full suite including those hook tests.
+#
+# WHAT EACH LEG INSTALLS (and why it differs by OS):
+#   * pyproject.toml gates the Windows trigger/clipboard/tray stack with
+#     `sys_platform == 'win32'` (keyboard, mouse, pyperclip, pywin32, pystray,
+#     pillow), so a plain `pip install -e .` on macOS/Linux will NOT pull them.
+#     That is fine for almost everything EXCEPT one detail: the platform-factory
+#     tests (tests/test_platform_factory.py) import the *Windows* backend module
+#     on every OS to test backend SELECTION, and src/voiceflow/platform/windows.py
+#     has a top-level `import keyboard`. So on macOS/Linux we install the pure-
+#     Python `keyboard` package explicitly so that import succeeds. (`keyboard`
+#     imports fine off-Windows; it just can't install a real hook -- which the
+#     tests never ask it to.) The macOS/Linux backend modules are import-safe by
+#     design (their pyobjc/evdev imports are lazy + guarded), so they need no
+#     extra packages just to be imported and introspected.
+# =============================================================================
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+# Cancel an in-progress run when newer commits land on the same ref.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Don't let one OS failing kill the others -- we want to SEE which OS
+      # broke, which is the whole point of a cross-OS matrix.
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        # 3.11 is the version the app is actually developed/validated against
+        # (see requirements.txt). pyproject supports 3.10-3.13; pin one here to
+        # keep CI fast -- widen this list if you want per-version coverage.
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # -- Linux is HEADLESS: install the native libraries the cross-platform
+      #    runtime deps need just to IMPORT. PortAudio is what `sounddevice`
+      #    dlopen's at import time (without libportaudio2 you get
+      #    "PortAudio library not found" the moment voiceflow.engine is imported).
+      #    xclip / wl-clipboard are the external clipboard binaries the Linux
+      #    backend shells out to -- not needed for the mocked tests, but cheap to
+      #    have and makes a manual run on the runner possible.
+      - name: Install Linux system libraries (headless)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libportaudio2 xclip wl-clipboard
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      # -- Install the package + its (CPU-only) runtime deps + pytest.
+      #    `pip install -e .` resolves pyproject's `dependencies`, which are
+      #    floored ranges; on macOS/Linux the `sys_platform == 'win32'` deps are
+      #    skipped automatically. This pulls faster-whisper / ctranslate2 (CPU
+      #    build) / onnxruntime / numpy / sounddevice -- all cross-platform -- so
+      #    the engine module imports on every OS. NO torch and NO nvidia-*-gpu
+      #    wheels are ever installed (the GPU runtime is fetched on demand by the
+      #    app, never in CI), which is exactly why CI is CPU-only.
+      - name: Install package + test deps (CPU-only)
+        run: python -m pip install -e . pytest pytest-cov
+
+      # -- See the long header note: on macOS/Linux the platform-factory tests
+      #    import the Windows backend module, which does a top-level
+      #    `import keyboard`. Install the pure-Python `keyboard` package on the
+      #    non-Windows legs so that import resolves. (On Windows it's already a
+      #    declared dependency, so this step is skipped there.)
+      - name: Install keyboard (needed to import the Windows backend in tests)
+        if: runner.os != 'Windows'
+        run: python -m pip install "keyboard>=0.13"
+
+      # -- Run the suite.
+      #    * Windows runs the FULL suite (incl. the low-level-hook tests).
+      #    * macOS/Linux run the same files, but tests/test_multichord.py and
+      #      tests/test_taphold.py self-skip there -- so those legs are an
+      #      import + pure-logic + CPU-path subset by design (see header).
+      #    Coverage is collected only on the Linux leg to avoid duplicate work.
+      - name: Run tests (with coverage on Linux)
+        if: runner.os == 'Linux'
+        run: python -m pytest --cov=voiceflow --cov-report=term-missing
+
+      - name: Run tests
+        if: runner.os != 'Linux'
+        run: python -m pytest

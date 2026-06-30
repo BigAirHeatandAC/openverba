@@ -1,0 +1,9 @@
+{
+  "version": "1.1.0",
+  "url": "https://openverba.com/download/OpenVerba-Setup-1.1.0.exe",
+  "sha256": "9d868525ac60c34d28777f385bfa415c94bbade8536aa792394b9d71136f9650",
+  "size": 76728916,
+  "notes": "Live preview bar, instant um/uh cleanup, snippets, file transcription, multi-language, per-app modes, draggable bar, faster app + history fixes, OpenVerba branding.",
+  "mandatory": false,
+  "pub_date": "2026-06-18T03:29:00Z"
+}

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=VoiceFlow
+GenericName=Speech-to-Text Dictation
+Comment=Free, offline, local speech-to-text dictation for your desktop
+Exec=VoiceFlow
+Icon=voiceflow
+Terminal=false
+Categories=Utility;AudioVideo;Audio;Accessibility;
+Keywords=speech;dictation;transcription;whisper;voice;offline;stt;
+StartupNotify=false
+StartupWMClass=VoiceFlow
+X-AppImage-Name=VoiceFlow
+X-AppImage-Version=1.0.0

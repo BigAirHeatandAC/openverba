@@ -1,0 +1,73 @@
+name: Bug report
+description: Something isn't working as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug! Please fill in the details
+        below so we can reproduce and fix it quickly.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+      placeholder: When I press my trigger in Notepad, nothing pastes...
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Launch VoiceFlow
+        2. Focus app X
+        3. Press the trigger and speak
+        4. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS (Apple Silicon)
+        - macOS (Intel)
+        - Linux (X11)
+        - Linux (Wayland)
+    validations:
+      required: true
+  - type: input
+    id: session
+    attributes:
+      label: Linux session type (if Linux)
+      description: Output of `echo $XDG_SESSION_TYPE` (x11 / wayland), or N/A.
+      placeholder: wayland
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU / acceleration
+      placeholder: NVIDIA RTX 3050 4GB (GPU enabled) / CPU only / Apple M2
+  - type: input
+    id: model
+    attributes:
+      label: Model in use
+      placeholder: small.en
+  - type: input
+    id: version
+    attributes:
+      label: VoiceFlow version
+      description: From the About screen or `voiceflow --version`.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Paste lines from the log file (Settings -> Open log folder), if any.
+        This will be rendered as code, so no need for backticks.
+      render: shell

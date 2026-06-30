@@ -1,0 +1,49 @@
+# VoiceFlow dependencies.
+#
+# Versions are pinned to the ones validated in the project venv
+# (C:\Users\shaha\voiceflow\venv, Python 3.11 on Windows 11).
+#
+# The GPU CUDA runtime libraries (nvidia-cublas-cu12, nvidia-cudnn-cu12) are
+# installed ON DEMAND by the "Enable GPU acceleration" flow, NOT at install time,
+# so they are NOT listed here. The bundled CPU build of ctranslate2 runs without
+# them. See voiceflow/cuda.py (GPU_RUNTIME_PACKAGES) for the exact wheels.
+
+# ---------------------------------------------------------------------------
+# Runtime: speech recognition core
+# ---------------------------------------------------------------------------
+faster-whisper==1.2.1
+ctranslate2==4.8.0          # CPU baseline; GPU build uses the on-demand CUDA libs
+huggingface_hub==1.19.0     # model download (snapshot_download with retries)
+tokenizers==0.23.1
+av==17.1.0                  # audio decode used by faster-whisper
+onnxruntime==1.26.0         # Silero VAD backend
+numpy==2.4.6
+
+# ---------------------------------------------------------------------------
+# Runtime: audio capture, input/paste, GUI, tray
+# ---------------------------------------------------------------------------
+sounddevice==0.5.5          # 16 kHz mono mic capture (bundles PortAudio dll)
+keyboard==0.13.5            # keyboard-combo triggers (with suppression)
+mouse==0.7.1                # optional mouse helper (single-button suppression uses our own WH_MOUSE_LL hook)
+pyperclip==1.11.0           # clipboard text helper
+pywin32==312                # win32clipboard (all-format save/restore), SendInput, win32 APIs
+customtkinter==5.2.2        # modern dark GUI
+darkdetect==0.8.0           # customtkinter system-theme detection
+pystray==0.19.5             # system tray icon
+pillow==12.2.0              # tray icon images / app assets
+
+# ---------------------------------------------------------------------------
+# Runtime: optional, graceful-degradation hardware detection
+# These improve hardware.detect_hardware() but are NOT required: it falls back
+# to nvidia-smi parsing and stdlib/ctypes probes when they are absent.
+# ---------------------------------------------------------------------------
+# psutil>=5.9            # better CPU core/thread + RAM detection (falls back to os.cpu_count / GlobalMemoryStatusEx)
+# nvidia-ml-py>=12.0     # NVML GPU detection (falls back to nvidia-smi)
+
+# ---------------------------------------------------------------------------
+# Build / packaging (install with: scripts\build.bat). Not needed to run.
+# ---------------------------------------------------------------------------
+# pyinstaller>=6.0       # builds the onedir, windowed bundle from packaging/voiceflow.spec
+#
+# Inno Setup (ISCC.exe) is a separate Windows install, not a pip package:
+#   https://jrsoftware.org/isdl.php   (compiles packaging/installer.iss)

@@ -1,0 +1,24 @@
+{
+  "name": "OpenVerba",
+  "short_name": "OpenVerba",
+  "description": "Free, private, offline voice typing for Windows. Press a key, speak, and it types into any app — entirely on your own PC.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#050506",
+  "icons": [
+    {
+      "src": "/assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

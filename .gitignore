@@ -1,0 +1,88 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+*.egg
+*.whl
+# Editable-install artifacts (pip install -e .)
+build/lib/
+*.pth
+__editable__.*
+
+# ---------------------------------------------------------------------------
+# Virtual environments
+# (the project venv lives outside the repo, but ignore any local ones too)
+# ---------------------------------------------------------------------------
+venv/
+.venv/
+env/
+ENV/
+
+# ---------------------------------------------------------------------------
+# Tooling caches / coverage
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ---------------------------------------------------------------------------
+# PyInstaller build output
+# ---------------------------------------------------------------------------
+build/
+dist/
+*.manifest
+# keep packaging/*.spec under version control; ignore any auto-generated ones
+/*.spec
+
+# ---------------------------------------------------------------------------
+# Inno Setup installer output / shipped binaries
+# ---------------------------------------------------------------------------
+Output/
+*.exe
+# Large distribution binaries staged into the site by build.bat — publish these
+# via GitHub Releases / CDN, not git. (The *.exe rule above already covers them;
+# listed explicitly for clarity.)
+website/download/*.exe
+
+# ---------------------------------------------------------------------------
+# Runtime data: logs, downloaded models, debug recordings, local config
+# (these normally live in %LOCALAPPDATA%\VoiceFlow, but ignore any that land
+#  in the tree during development)
+# ---------------------------------------------------------------------------
+*.log
+models/
+recordings/
+config.json
+
+# ---------------------------------------------------------------------------
+# Deploy / secrets
+# ---------------------------------------------------------------------------
+.vercel/
+website/.vercel/
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Keep tracked (do NOT ignore): the auto-update manifest.
+# ---------------------------------------------------------------------------
+!website/latest.json

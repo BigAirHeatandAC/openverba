@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background: radial-gradient(900px 520px at 50% -8%, rgba(91,236,89,0.20), transparent 70%), #050506;
+    color: #f4f6f5;
+    font-family: 'Geist', system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 92px 96px;
+  }
+  .brand { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .brand svg { display: block; }
+  .brand span { font-family: 'Clash Display', sans-serif; font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
+  .brand .a { color: #5bec59; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 20px; font-weight: 500; color: #baffc1;
+    background: rgba(91,236,89,0.08); border: 1px solid rgba(91,236,89,0.25);
+    border-radius: 999px; padding: 9px 20px; width: fit-content; margin-bottom: 34px;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #5bec59; box-shadow: 0 0 12px #5bec59; }
+  h1 {
+    font-family: 'Clash Display', sans-serif; font-weight: 600;
+    font-size: 78px; line-height: 1.04; letter-spacing: -0.02em; max-width: 17ch;
+  }
+  h1 .g { background: linear-gradient(120deg,#5bec59,#baffc1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  p { margin-top: 30px; font-size: 27px; color: #9aa4a1; max-width: 40ch; }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#5bec59"/><stop offset="1" stop-color="#baffc1"/></linearGradient></defs>
+      <rect x="2" y="2" width="44" height="44" rx="13" fill="#0a0b0c" stroke="url(#g)" stroke-width="1.5"/>
+      <rect x="20" y="11" width="8" height="16" rx="4" fill="url(#g)"/>
+      <path d="M15 23a9 9 0 0 0 18 0" stroke="url(#g)" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <line x1="24" y1="32" x2="24" y2="37" stroke="url(#g)" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <span>Open<span class="a">Verba</span></span>
+  </div>
+  <div class="pill"><span class="dot"></span> Free · 100% local · open source</div>
+  <h1>Voice typing that never leaves your <span class="g">computer.</span></h1>
+  <p>Press a key, speak, and it types into any app on Windows. Powered by an on-device speech model.</p>
+</body>
+</html>

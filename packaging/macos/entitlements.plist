@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  VoiceFlow - macOS hardened-runtime entitlements.
+
+  Applied at codesign time (PRODUCTION_PLAN.md section 4.2 / 5.2):
+      codesign --force --deep --options runtime --timestamp \
+        --entitlements packaging/macos/entitlements.plist \
+        -s "Developer ID Application: ... (TEAMID)" dist/VoiceFlow.app
+
+  Why each key is required for a PyInstaller-frozen CPython app that records the
+  mic and synthesizes a Cmd+V paste:
+
+  * com.apple.security.device.audio-input
+      Records the microphone under the hardened runtime. Pairs with the
+      NSMicrophoneUsageDescription string in the .app's Info.plist (set by the
+      BUNDLE step in voiceflow.spec), which is what the OS shows in the prompt.
+
+  * com.apple.security.cs.disable-library-validation
+      PyInstaller bundles many third-party .dylib/.so (ctranslate2, onnxruntime,
+      PortAudio, numpy, pyobjc, the Python.framework) that are NOT all signed by
+      the same Team ID. Without this, the hardened runtime refuses to load them
+      and the app crashes on launch. Standard for frozen Python apps.
+
+  * com.apple.security.cs.allow-unsigned-executable-memory
+      CPython (and CTranslate2's runtime codegen) allocate executable memory.
+      The hardened runtime blocks W^X / unsigned executable pages unless this is
+      granted; without it the interpreter aborts.
+
+  NOTE: Accessibility (post Cmd+V) and Input Monitoring (listen to the global
+  hotkey) are NOT entitlements -- they are runtime TCC grants the user approves
+  in System Settings. The first-run UI (voiceflow.ui.first_run via
+  voiceflow.platform.macos) detects them and opens the right pane. TCC grants
+  bind to the code signature, so the app MUST be signed + notarized (an ad-hoc
+  rebuild loses the grant). See packaging/macos/Info.plist.md.
+-->
+<plist version="1.0">
+<dict>
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+  <key>com.apple.security.device.audio-input</key>
+  <true/>
+</dict>
+</plist>

@@ -1,0 +1,299 @@
+/* ============================================================
+   OpenSOP — scoped styles
+   Loaded ONLY on opensop.html. Reuses every token/class from
+   style.css; this file adds ONLY the OpenSOP-specific mockups
+   (recording bar + sample guide-PDF card) and a couple of small
+   layout helpers. It must not override shared OpenVerba rules.
+   ============================================================ */
+
+/* ---------- How-it-works: 4-step flow (extends .steps to 4 cols) ---------- */
+.steps--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ---------- Recording bar mockup (hero) ---------- */
+.recbar {
+  margin: 56px auto 0;
+  max-width: 560px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  text-align: left;
+}
+.recbar__rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--green-soft);
+  white-space: nowrap;
+}
+.recbar__pulse {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(91, 236, 89, 0.6);
+  animation: pulse 1.6s infinite;   /* reuses keyframes from style.css */
+}
+.recbar__time {
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.recbar__wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+  height: 22px;
+  overflow: hidden;
+}
+.recbar__wave span {
+  flex: 1;
+  min-width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--green) 0%, var(--green-soft) 100%);
+  opacity: 0.85;
+  animation: recwave 1.1s ease-in-out infinite;
+}
+.recbar__wave span:nth-child(2n)  { animation-delay: 0.15s; }
+.recbar__wave span:nth-child(3n)  { animation-delay: 0.32s; }
+.recbar__wave span:nth-child(4n)  { animation-delay: 0.48s; }
+.recbar__wave span:nth-child(5n)  { animation-delay: 0.66s; }
+@keyframes recwave {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(1); }
+}
+.recbar__keys {
+  display: inline-flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+.kbd {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 0.15em 0.5em;
+  line-height: 1.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .recbar__wave span { animation: none !important; transform: scaleY(0.55); }
+}
+
+/* ---------- Sample guide / PDF card ---------- */
+.guidecard {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  text-align: left;
+}
+.guidecard__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+.guidecard__dot { width: 11px; height: 11px; border-radius: 50%; background: var(--line-2); }
+.guidecard__dot:nth-child(1) { background: #ff5f56; opacity: 0.7; }
+.guidecard__dot:nth-child(2) { background: #ffbd2e; opacity: 0.7; }
+.guidecard__dot:nth-child(3) { background: var(--green); opacity: 0.7; }
+.guidecard__file {
+  margin-left: 10px;
+  font-size: 0.82rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, monospace;
+}
+.guidecard__page {
+  padding: 26px 26px 30px;
+  background:
+    radial-gradient(120% 100% at 50% -10%, rgba(91,236,89,0.05), transparent 60%);
+}
+.guidecard__doctitle {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.guidecard__docmeta {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--muted-2);
+}
+.guidecard__rule {
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0 20px;
+}
+
+.gstep {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.gstep:last-child { margin-bottom: 0; }
+.gstep__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 9px;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--green);
+  background: rgba(91, 236, 89, 0.1);
+  border: 1px solid rgba(91, 236, 89, 0.28);
+}
+.gstep__body { min-width: 0; }
+.gstep__text { font-size: 0.98rem; color: var(--text); line-height: 1.55; }
+.gstep__text b { font-weight: 600; }
+
+/* Mini "screenshot" shot with a red numbered marker — pure CSS, no photo */
+.gshot {
+  position: relative;
+  margin-top: 12px;
+  height: 92px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.gshot__chrome {
+  display: flex;
+  gap: 5px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,0.02);
+}
+.gshot__chrome i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--line-2);
+  display: inline-block;
+}
+.gshot__skeleton {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.gshot__skeleton span {
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+}
+.gshot__skeleton span:nth-child(1) { width: 70%; }
+.gshot__skeleton span:nth-child(2) { width: 45%; }
+.gshot__skeleton span:nth-child(3) { width: 58%; }
+/* the red numbered circle dropped on the exact click target */
+.gshot__marker {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #ff4d4f;
+  border: 2px solid #ffd6d6;
+  box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ---------- Two-up "local vs cloud" cards ---------- */
+.modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 8px;
+}
+.mode {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 26px;
+}
+.mode--featured { border-color: rgba(91, 236, 89, 0.4); }
+.mode__tag {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+.mode__title { font-size: 1.22rem; margin-bottom: 6px; }
+.mode__price { font-size: 0.92rem; color: var(--muted); margin-bottom: 16px; }
+.mode__price b { color: var(--green-soft); font-weight: 600; }
+.mode ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.mode li {
+  position: relative;
+  padding-left: 28px;
+  color: var(--muted);
+  font-size: 0.97rem;
+}
+.mode li strong { color: var(--text); font-weight: 600; }
+.mode li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px;
+  width: 16px; height: 16px;
+  border-radius: 5px;
+  background: rgba(91, 236, 89, 0.12);
+  border: 1px solid rgba(91, 236, 89, 0.4);
+}
+.mode li::after {
+  content: "";
+  position: absolute;
+  left: 4.5px; top: 8px;
+  width: 7px; height: 4px;
+  border-left: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  transform: rotate(-45deg);
+}
+
+/* ---------- Index teaser card (sibling-product cross-link) ---------- */
+.teaser {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  padding: 44px 40px;
+}
+.teaser__copy .eyebrow { margin-bottom: 12px; }
+.teaser__copy .section__title { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+.teaser__copy p { margin-top: 14px; color: var(--muted); font-size: 1.08rem; max-width: 46ch; }
+.teaser__cta { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .steps--4 { grid-template-columns: 1fr 1fr; }
+  .modes { grid-template-columns: 1fr; }
+  .teaser { grid-template-columns: 1fr; gap: 28px; padding: 34px 26px; }
+}
+@media (max-width: 620px) {
+  .steps--4 { grid-template-columns: 1fr; }
+  .recbar { flex-wrap: wrap; border-radius: var(--radius); justify-content: center; }
+  .recbar__keys { width: 100%; justify-content: center; }
+}

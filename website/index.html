@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenVerba — Free, private, offline voice typing for Windows</title>
+  <meta name="description" content="OpenVerba is a free, 100% local voice-to-text app for Windows. Press a key, speak, and it types into any app — live as you talk — and even edits your text by voice with a local AI. Powered by faster-whisper and runs entirely on your own PC — no cloud, no account, no subscription." />
+  <meta name="theme-color" content="#050506" />
+  <!-- Set this to the real production URL when the domain is live -->
+  <link rel="canonical" href="https://openverba.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="OpenVerba" />
+  <meta property="og:url" content="https://openverba.com/" />
+  <meta property="og:title" content="OpenVerba — Free, private, offline voice typing for Windows" />
+  <meta property="og:description" content="Press a key, speak, and it types into any app. 100% local, GPU-accelerated, free and open source. Your voice never leaves your PC." />
+  <!-- Raster card (SVG previews don't render on social platforms). Use an absolute URL once the domain is live. -->
+  <meta property="og:image" content="https://openverba.com/assets/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="OpenVerba — free, private, offline voice typing for Windows" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OpenVerba — Free, private, offline voice typing for Windows" />
+  <meta name="twitter:description" content="Press a key, speak, and it types into any app. 100% local, GPU-accelerated, free and open source." />
+  <meta name="twitter:image" content="https://openverba.com/assets/og-card.png" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Scoped extras (only the OpenSOP teaser card on this page uses these) -->
+  <link rel="stylesheet" href="opensop.css" />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenVerba",
+    "description": "Free, private, offline voice-to-text dictation for Windows. Press a key, speak, and it types into any app. Runs entirely on your own PC using faster-whisper.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Windows 10, Windows 11",
+    "softwareLicense": "MIT",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Is it really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — completely free, with no account, trial, or subscription. OpenVerba is open source under the MIT license." } },
+      { "@type": "Question", "name": "Does my voice get sent anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. Your microphone audio is transcribed locally on your CPU or GPU and then discarded. It is never written to disk or uploaded. The only time OpenVerba uses the network is to download the speech model once on first run — after that you can run it fully offline." } },
+      { "@type": "Question", "name": "Do I need a powerful computer?", "acceptedAnswer": { "@type": "Answer", "text": "No. OpenVerba runs on the CPU with a lightweight model on ordinary machines. If you have an NVIDIA GPU it will use it automatically for faster, larger, more accurate models — but a GPU is optional." } },
+      { "@type": "Question", "name": "Which apps does it work in?", "acceptedAnswer": { "@type": "Answer", "text": "Any app you can paste into — documents, browsers, chat apps, IDEs, even the terminal. OpenVerba inserts text into whatever window is focused." } },
+      { "@type": "Question", "name": "Will it overwrite what I copied?", "acceptedAnswer": { "@type": "Answer", "text": "No. OpenVerba saves your existing clipboard — including images, files and formatted content — pastes the transcript, then restores your clipboard exactly as it was." } },
+      { "@type": "Question", "name": "Can I change the trigger?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use a keyboard combo, a single mouse button, or a two-button chord. A live picker shows you exactly what it detected and warns you if a choice might conflict with normal clicking. Tap the trigger to dictate; hold it to switch into command and editing mode." } },
+      { "@type": "Question", "name": "Can it edit text I've already written?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Select some text, hold your trigger, and say how to change it — like 'make this sound more natural' or 'fix the grammar' — and a local AI model rewrites it in place. It is optional and runs entirely on your own machine, with no cloud, account, or cost." } },
+      { "@type": "Question", "name": "How do updates work?", "acceptedAnswer": { "@type": "Answer", "text": "OpenVerba quietly checks for a newer version and notifies you when one is ready. Choose 'Check for updates' and it downloads the new version, verifies it with SHA-256, and installs it — no admin rights needed, and your settings and downloaded model are kept. The automatic check can be turned off in Settings." } },
+      { "@type": "Question", "name": "Windows says 'Windows protected your PC' — is it safe?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. That is Windows SmartScreen being cautious about a new publisher because the installer is not signed with a paid certificate yet — it is not a virus warning. Click 'More info' then 'Run anyway'. OpenVerba is open source, installs per-user without admin rights, and you can verify the download against the published SHA-256 hash (or look it up on VirusTotal) before running it." } },
+      { "@type": "Question", "name": "Does it need admin rights to install?", "acceptedAnswer": { "@type": "Answer", "text": "No. OpenVerba installs per-user to your local app data, so no administrator rights are required." } },
+      { "@type": "Question", "name": "Is there a Mac or Linux version?", "acceptedAnswer": { "@type": "Answer", "text": "Windows is available today. A cross-platform build for macOS and Linux is actively in progress." } }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- ===================== NAV ===================== -->
+  <header class="nav" id="top">
+    <div class="container nav__inner">
+      <a class="brand" href="#top" aria-label="OpenVerba home">
+        <img class="brand__logo" src="assets/logo.svg" alt="" width="32" height="32" />
+        <span class="brand__name">Open<span class="brand__accent">Verba</span></span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#edit">Editing</a>
+        <a href="#local">Local model</a>
+        <a href="#models">Models</a>
+        <a href="#faq">FAQ</a>
+        <a href="/opensop">OpenSOP</a>
+      </nav>
+      <div class="nav__actions">
+        <a class="btn btn--ghost btn--sm nav__github" href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn--primary btn--sm" href="#download">Download</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu" role="region" aria-label="Mobile navigation" hidden>
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#edit">Editing</a>
+      <a href="#local">Local model</a>
+      <a href="#models">Models</a>
+      <a href="#faq">FAQ</a>
+      <a href="/opensop">OpenSOP</a>
+      <a class="btn btn--primary" href="#download">Download</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__inner">
+        <span class="pill">
+          <span class="pill__dot"></span> Free · 100% local · open source
+        </span>
+        <h1 class="hero__title">
+          Voice typing that never<br />
+          leaves your <span class="grad-text">computer.</span>
+        </h1>
+        <p class="hero__sub">
+          Press a key and speak — OpenVerba types your words into whatever app you're using,
+          live as you talk. Hold the key instead and it edits your text by voice. Every word is
+          transcribed <strong>locally on your own PC</strong> — no cloud, no account, no subscription.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary btn--lg" href="download/OpenVerba-Setup-1.1.0.exe" download>
+            Download for Windows
+          </a>
+          <a class="btn btn--ghost btn--lg" href="#how">See how it works</a>
+        </div>
+        <p class="hero__micro">Free forever · Windows 10 &amp; 11 · No sign-up · MIT licensed</p>
+
+        <!-- Demo card -->
+        <div class="demo" aria-hidden="true">
+          <div class="demo__bar">
+            <span class="demo__dot"></span><span class="demo__dot"></span><span class="demo__dot"></span>
+            <span class="demo__title">Any app — editor, browser, chat, terminal</span>
+          </div>
+          <div class="demo__body">
+            <p class="demo__typed">
+              Meeting notes: ship the installer this week, then start the macOS port.<span class="demo__caret"></span>
+            </p>
+            <div class="demo__status">
+              <span class="demo__rec"><span class="demo__pulse"></span> Listening</span>
+              <span class="demo__meta">live · on-device · private</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TRUST STRIP ===================== -->
+    <section class="strip">
+      <div class="container strip__inner">
+        <div class="strip__item"><span class="strip__num">0</span><span class="strip__lbl">words sent to the cloud</span></div>
+        <div class="strip__item"><span class="strip__num">$0</span><span class="strip__lbl">free forever</span></div>
+        <div class="strip__item"><span class="strip__num">Any</span><span class="strip__lbl">app you can paste into</span></div>
+        <div class="strip__item"><span class="strip__num">100%</span><span class="strip__lbl">runs on your machine</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="section" id="how">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">How it works</span>
+          <h2 class="section__title">Three steps. No setup after install.</h2>
+          <p class="section__lede">
+            OpenVerba sits quietly in your system tray and waits for your trigger.
+            From press to typed text, everything happens on your own machine.
+          </p>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="step__num">1</span>
+            <h3 class="step__title">Tap to talk, hold to edit</h3>
+            <p class="step__text">
+              Pick a key combo (like <code>Ctrl+Shift+Space</code>) or a mouse button.
+              <strong>Tap</strong> it to start dictating; <strong>hold</strong> it for a
+              second to give a command or edit text with your voice.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step__num">2</span>
+            <h3 class="step__title">Speak naturally</h3>
+            <p class="step__text">
+              Your microphone audio is transcribed on your own CPU or GPU.
+              The audio is processed and then discarded — never saved, never uploaded.
+            </p>
+          </li>
+          <li class="step">
+            <span class="step__num">3</span>
+            <h3 class="step__title">It types anywhere</h3>
+            <p class="step__text">
+              The text drops into whatever window is focused — your editor, browser,
+              chat box or terminal — then your clipboard is restored exactly as it was.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section class="section section--alt" id="features">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Features</span>
+          <h2 class="section__title">Everything you need. Nothing you don't.</h2>
+          <p class="section__lede">
+            A focused dictation tool that respects your privacy, your hardware and your wallet.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🔒</div>
+            <h3 class="card__title">100% local &amp; offline</h3>
+            <p class="card__text">
+              Audio is transcribed on your PC and discarded. Nothing is sent to any server.
+              After the model downloads once, OpenVerba works fully offline.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🪟</div>
+            <h3 class="card__title">Works in any app</h3>
+            <p class="card__text">
+              OpenVerba types into the focused window by pasting, so it works everywhere a
+              normal paste works — editors, browsers, chat, even the terminal.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">⚡</div>
+            <h3 class="card__title">GPU-accelerated</h3>
+            <p class="card__text">
+              Uses your NVIDIA GPU for near-instant transcription when one is present, and
+              falls back to the CPU automatically when it isn't.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">📋</div>
+            <h3 class="card__title">Preserves your clipboard</h3>
+            <p class="card__text">
+              Your previous clipboard — text, images, files, even HTML — is saved before
+              OpenVerba pastes and restored right after. Dictation never clobbers your copy.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🎯</div>
+            <h3 class="card__title">Smart model picker</h3>
+            <p class="card__text">
+              On first run it scans your GPU, VRAM, CPU and RAM, then recommends the best
+              speech model for your machine — with a clear comparison of size, speed and accuracy.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">⌨️</div>
+            <h3 class="card__title">Live as you speak</h3>
+            <p class="card__text">
+              Turn on real-time mode and watch your words appear the moment you say them —
+              it only commits text it's sure of, so it never rewrites what's already on screen.
+              Prefer to review first? Classic press-speak-paste still works.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🗣️</div>
+            <h3 class="card__title">Voice commands</h3>
+            <p class="card__text">
+              Hold your trigger and just say what to do — "delete last word", "select all",
+              "press enter", "undo" — and OpenVerba runs it instead of typing it out.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🪄</div>
+            <h3 class="card__title">Edit with your voice</h3>
+            <p class="card__text">
+              Select some text, hold your trigger, and say how to change it — "make this
+              sound more natural", "fix the grammar", "delete the last sentence." A local
+              AI model rewrites it in place. Optional and 100% on-device.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🖱️</div>
+            <h3 class="card__title">Flexible triggers</h3>
+            <p class="card__text">
+              Use a keyboard combo, a mouse button, or a two-button chord. The live trigger
+              picker shows what it detected and warns you if a choice is conflict-prone.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🔄</div>
+            <h3 class="card__title">Stays up to date</h3>
+            <p class="card__text">
+              OpenVerba checks for new versions and updates itself in a click — the
+              download is verified before it installs, no admin rights needed, and
+              your settings and model carry over.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">💚</div>
+            <h3 class="card__title">Free &amp; open source</h3>
+            <p class="card__text">
+              No account, no trial, no subscription. OpenVerba is MIT licensed — read the
+              code, build it yourself, or send a patch.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== LOCAL MODEL ===================== -->
+    <section class="section" id="local">
+      <div class="container">
+        <div class="split">
+          <div class="split__copy">
+            <span class="eyebrow">On-device AI</span>
+            <h2 class="section__title">A speech model that runs on <span class="grad-text">your</span> computer.</h2>
+            <p class="section__lede">
+              OpenVerba uses <a href="https://github.com/SYSTRAN/faster-whisper" target="_blank" rel="noopener">faster-whisper</a>,
+              an optimized build of OpenAI's Whisper speech model — running entirely on your own hardware.
+            </p>
+            <ul class="checklist">
+              <li><strong>Downloaded once, then yours.</strong> The model downloads a single time on first run and is cached on your PC. After that, no internet is required.</li>
+              <li><strong>Right-sized for your machine.</strong> OpenVerba detects your hardware and picks a model that fits — from a tiny CPU-friendly build to a high-accuracy GPU model.</li>
+              <li><strong>GPU when you have one.</strong> With an NVIDIA GPU it uses CUDA for near-instant results; without one it runs on the CPU.</li>
+              <li><strong>Truly offline.</strong> Flip on offline mode and OpenVerba never touches the network again — your voice and your text stay on the device.</li>
+            </ul>
+          </div>
+          <aside class="panel">
+            <div class="panel__row">
+              <span class="panel__label">Engine</span>
+              <span class="panel__value">faster-whisper</span>
+            </div>
+            <div class="panel__row">
+              <span class="panel__label">Where it runs</span>
+              <span class="panel__value">Your CPU / NVIDIA GPU</span>
+            </div>
+            <div class="panel__row">
+              <span class="panel__label">Network use</span>
+              <span class="panel__value">Model download only</span>
+            </div>
+            <div class="panel__row">
+              <span class="panel__label">Your audio</span>
+              <span class="panel__value">Transcribed &amp; discarded</span>
+            </div>
+            <div class="panel__row">
+              <span class="panel__label">Your clipboard</span>
+              <span class="panel__value">Saved &amp; restored</span>
+            </div>
+            <div class="panel__flag">
+              <span class="panel__dot"></span> Nothing leaves your machine
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== EDIT BY VOICE ===================== -->
+    <section class="section section--alt" id="edit">
+      <div class="container">
+        <div class="split">
+          <div class="split__copy">
+            <span class="eyebrow">Edit by voice</span>
+            <h2 class="section__title">Don't just dictate — <span class="grad-text">edit</span> out loud.</h2>
+            <p class="section__lede">
+              Hold your trigger instead of tapping it and OpenVerba switches from typing to
+              <strong>doing</strong>. Run quick commands, or have a local AI model rewrite
+              whatever you've highlighted — without ever touching the keyboard.
+            </p>
+            <ul class="checklist">
+              <li><strong>Rewrite what you've selected.</strong> Highlight a sentence, hold, and say "make this clearer" or "sound more professional" — it's replaced in place.</li>
+              <li><strong>Fix and reshape, in plain English.</strong> "Fix the grammar", "remove the word <em>actually</em>", "turn this into bullet points."</li>
+              <li><strong>Hands-free commands.</strong> "Select all", "delete last word", "press enter", "undo" — the mechanical stuff, spoken.</li>
+              <li><strong>Local, free, and optional.</strong> The AI runs on your own machine — no cloud, no API keys, no cost. Switch it on in one click; dictation works great without it.</li>
+            </ul>
+          </div>
+          <aside class="panel">
+            <div class="panel__row"><span class="panel__label">Tap trigger</span><span class="panel__value">Dictate</span></div>
+            <div class="panel__row"><span class="panel__label">Hold trigger</span><span class="panel__value">Command / edit</span></div>
+            <div class="panel__row"><span class="panel__label">"Make this sound natural"</span><span class="panel__value">AI rewrite</span></div>
+            <div class="panel__row"><span class="panel__label">"Select all"</span><span class="panel__value">Keystroke</span></div>
+            <div class="panel__row"><span class="panel__label">Where the AI runs</span><span class="panel__value">Your machine</span></div>
+            <div class="panel__flag"><span class="panel__dot"></span> The AI never leaves your PC either</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MODELS ===================== -->
+    <section class="section" id="models">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Models</span>
+          <h2 class="section__title">Pick your trade-off: speed vs. accuracy.</h2>
+          <p class="section__lede">
+            OpenVerba recommends a model automatically, but you can switch any time in the
+            built-in model manager. Bigger models are more accurate; smaller models are faster
+            and lighter on your hardware.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Languages</th>
+                <th scope="col">Disk</th>
+                <th scope="col">Accuracy</th>
+                <th scope="col">Speed</th>
+                <th scope="col">Good for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>tiny.en</code></td><td>English</td><td>~75 MB</td><td>Low</td><td>Fastest</td><td>Old / low-power CPUs</td></tr>
+              <tr><td><code>base.en</code></td><td>English</td><td>~145 MB</td><td>Good</td><td>Fast</td><td class="hl">CPU-only default</td></tr>
+              <tr><td><code>small.en</code></td><td>English</td><td>~480 MB</td><td>High</td><td>Fast</td><td class="hl">4 GB+ GPU default</td></tr>
+              <tr><td><code>distil-small.en</code></td><td>English</td><td>~340 MB</td><td>High</td><td>Fastest</td><td>Low-latency English</td></tr>
+              <tr><td><code>medium.en</code></td><td>English</td><td>~1.5 GB</td><td>Very high</td><td>Medium</td><td>6 GB+ GPU (fits ~4 GB tight)</td></tr>
+              <tr><td><code>distil-large-v3</code></td><td>English</td><td>~1.5 GB</td><td>Very high</td><td>Fast</td><td>Best high-end English</td></tr>
+              <tr><td><code>large-v3</code></td><td>Multilingual</td><td>~3.1 GB</td><td>Best</td><td>Slow</td><td>6–10 GB+ GPU, multilingual</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          No GPU? <code>base.en</code> is the sweet spot on CPU. A GPU makes the larger,
+          more accurate models practical for real-time dictation.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== REQUIREMENTS ===================== -->
+    <section class="section section--alt" id="requirements">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow">Requirements</span>
+          <h2 class="section__title">What you need to run it</h2>
+        </div>
+        <div class="grid grid--3">
+          <article class="card card--mini">
+            <h3 class="card__title">Windows 10 or 11</h3>
+            <p class="card__text">Installs per-user — <strong>no administrator rights needed</strong>. A macOS and Linux build is in progress.</p>
+          </article>
+          <article class="card card--mini">
+            <h3 class="card__title">A microphone</h3>
+            <p class="card__text">Any mic Windows recognizes works — built-in, USB, or headset.</p>
+          </article>
+          <article class="card card--mini">
+            <h3 class="card__title">Optional NVIDIA GPU</h3>
+            <p class="card__text">Speeds up transcription dramatically. Not required — OpenVerba runs on the CPU too.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section" id="faq">
+      <div class="container container--narrow">
+        <div class="section__head">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="section__title">Questions, answered</h2>
+        </div>
+        <div class="faq">
+          <details class="faq__item">
+            <summary>Is it really free?</summary>
+            <p>Yes — completely free, with no account, trial, or subscription. OpenVerba is open source under the MIT license.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Does my voice get sent anywhere?</summary>
+            <p>No. Your microphone audio is transcribed locally on your CPU or GPU and then discarded. It is never written to disk or uploaded. The only time OpenVerba uses the network is to download the speech model once on first run — after that you can run it fully offline.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Do I need a powerful computer?</summary>
+            <p>No. OpenVerba runs on the CPU with a lightweight model on ordinary machines. If you have an NVIDIA GPU it'll use it automatically for faster, larger, more accurate models — but a GPU is optional.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Which apps does it work in?</summary>
+            <p>Any app you can paste into — documents, browsers, chat apps, IDEs, even the terminal. OpenVerba inserts text into whatever window is focused.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Will it overwrite what I copied?</summary>
+            <p>No. OpenVerba saves your existing clipboard — including images, files and formatted content — pastes the transcript, then restores your clipboard exactly as it was.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Can I change the trigger?</summary>
+            <p>Yes. Use a keyboard combo, a single mouse button, or a two-button chord. A live picker shows you exactly what it detected and warns you if a choice might conflict with normal clicking. Tap the trigger to dictate; hold it to switch into command and editing mode.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Can it edit text I've already written?</summary>
+            <p>Yes. Select some text, hold your trigger, and say how to change it — like "make this sound more natural", "fix the grammar", or "delete the last sentence" — and a local AI model rewrites it in place. It's optional and runs entirely on your own machine, with no cloud, account, or cost.</p>
+          </details>
+          <details class="faq__item">
+            <summary>How do updates work?</summary>
+            <p>OpenVerba quietly checks for a newer version and lets you know when one's ready. Choose "Check for updates" and it downloads the new version, verifies it (SHA-256), and installs it for you — no admin rights needed, and your settings and downloaded model are kept. You can turn the automatic check off in Settings.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Windows says "Windows protected your PC" — is it safe?</summary>
+            <p>Yes. That blue box is Windows SmartScreen being cautious about a new publisher, because the installer isn't signed with a paid certificate yet — it is not a virus warning. Click <strong>More info</strong>, then <strong>Run anyway</strong>. OpenVerba is open source, installs per-user without admin rights, and you can verify the download against the SHA-256 hash listed in the <a href="#install">Installing safely</a> section (or look it up on VirusTotal) before running it. A signed installer that removes the prompt is on the roadmap.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Does it need admin rights to install?</summary>
+            <p>No. OpenVerba installs per-user to your local app data, so no administrator rights are required. It also won't run inside elevated windows unless you run OpenVerba as admin too.</p>
+          </details>
+          <details class="faq__item">
+            <summary>Is there a Mac or Linux version?</summary>
+            <p>Windows is available today. A cross-platform build for macOS and Linux is actively in progress.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MEET OPENSOP (sibling product teaser) ===================== -->
+    <section class="section section--alt" id="opensop-teaser">
+      <div class="container">
+        <div class="teaser">
+          <div class="teaser__copy">
+            <span class="eyebrow">Also from us</span>
+            <h2 class="section__title">Meet OpenSOP — turn any task into a <span class="grad-text">training guide.</span></h2>
+            <p>
+              Record yourself doing a computer task once, clicking and talking, and OpenSOP writes a
+              clean, illustrated step-by-step PDF automatically. Same local-first, private, free ethos
+              as OpenVerba.
+            </p>
+            <div class="teaser__cta">
+              <a class="btn btn--primary" href="/opensop">Explore OpenSOP</a>
+              <a class="btn btn--ghost" href="/opensop#how">How it works</a>
+            </div>
+          </div>
+          <!-- Mini recording-bar mockup (pure CSS, mirrors the OpenSOP page) -->
+          <div class="recbar" aria-hidden="true">
+            <span class="recbar__rec"><span class="recbar__pulse"></span> Recording</span>
+            <span class="recbar__time">00:42</span>
+            <span class="recbar__wave">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </span>
+            <span class="recbar__keys"><kbd class="kbd">Ctrl+Alt+R</kbd></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== INSTALL / SAFETY ===================== -->
+    <section class="section" id="install">
+      <div class="container container--narrow">
+        <div class="section__head">
+          <span class="eyebrow">Installing safely</span>
+          <h2 class="section__title">Is it safe? Here's the honest answer.</h2>
+          <p class="section__lede">
+            OpenVerba is a small, independent open-source project, so the installer isn't signed
+            with an expensive certificate yet. Windows may show a blue
+            <strong>"Windows protected your PC"</strong> box the first time you run it — that's
+            SmartScreen being cautious about a new publisher, not a virus warning. Here's exactly
+            what to do, and how to verify the file yourself.
+          </p>
+        </div>
+        <div class="grid grid--2">
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🛡️</div>
+            <h3 class="card__title">Get past "Windows protected your PC"</h3>
+            <ol class="ol-steps">
+              <li>Run <code>OpenVerba-Setup-1.1.0.exe</code> after it downloads.</li>
+              <li>If the blue SmartScreen box appears, click <strong>More info</strong>.</li>
+              <li>Click <strong>Run anyway</strong>, then follow the installer.</li>
+            </ol>
+            <p class="card__text">
+              It installs per-user — <strong>no administrator rights needed</strong> — and
+              uninstalls cleanly from Settings&nbsp;→&nbsp;Apps any time.
+            </p>
+          </article>
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">🔍</div>
+            <h3 class="card__title">Verify the download yourself</h3>
+            <p class="card__text">
+              Every release publishes its SHA-256 hash. Check the file you downloaded in
+              PowerShell before running it:
+            </p>
+            <pre class="code-block"><code>Get-FileHash OpenVerba-Setup-1.1.0.exe -Algorithm SHA256</code></pre>
+            <p class="card__text">It should match this exactly (OpenVerba&nbsp;1.1.0):</p>
+            <p class="hash"><code>9d868525ac60c34d28777f385bfa415c94bbade8536aa792394b9d71136f9650</code></p>
+            <p class="card__text">
+              <a href="https://www.virustotal.com/gui/file/9d868525ac60c34d28777f385bfa415c94bbade8536aa792394b9d71136f9650" target="_blank" rel="noopener">Look this file up on VirusTotal&nbsp;→</a>
+            </p>
+          </article>
+        </div>
+        <ul class="checklist reassure">
+          <li><strong>Open source.</strong> Every line that runs is public — read it, build it yourself, or check it against the hash above.</li>
+          <li><strong>No telemetry, ever.</strong> No analytics, no accounts, no phoning home beyond the one-time model download.</li>
+          <li><strong>A signed installer is on the roadmap.</strong> Once it's signed, the SmartScreen prompt goes away entirely.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== DOWNLOAD CTA ===================== -->
+    <section class="cta" id="download">
+      <div class="container cta__inner">
+        <div class="cta__glow" aria-hidden="true"></div>
+        <h2 class="cta__title">Start dictating in minutes.</h2>
+        <p class="cta__sub">
+          Free forever, private, and entirely yours. Download OpenVerba for Windows and talk to any app.
+        </p>
+        <div class="cta__buttons">
+          <a class="btn btn--primary btn--lg" href="download/OpenVerba-Setup-1.1.0.exe" download>Download for Windows</a>
+          <a class="btn btn--ghost btn--lg" href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">View source on GitHub</a>
+        </div>
+        <p class="cta__note">OpenVerba 1.1.0 · Windows 10 &amp; 11 · ~77 MB · MIT licensed</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a class="brand" href="#top" aria-label="OpenVerba home">
+          <img class="brand__logo" src="assets/logo.svg" alt="" width="28" height="28" />
+          <span class="brand__name">Open<span class="brand__accent">Verba</span></span>
+        </a>
+        <p class="footer__tag">Free, private, offline voice typing for Windows.</p>
+      </div>
+      <nav class="footer__cols" aria-label="Footer">
+        <div class="footer__col">
+          <span class="footer__h">Product</span>
+          <a href="#how">How it works</a>
+          <a href="#features">Features</a>
+          <a href="#edit">Editing</a>
+          <a href="#models">Models</a>
+          <a href="#download">Download</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__h">Learn</span>
+          <a href="#local">Local model</a>
+          <a href="#requirements">Requirements</a>
+          <a href="#install">Installing safely</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__h">Open source</span>
+          <a href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/BigAirHeatandAC/openverba/releases" target="_blank" rel="noopener">Releases</a>
+          <a href="https://github.com/BigAirHeatandAC/openverba/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container footer__bottom">
+      <span>© 2026 OpenVerba · MIT licensed</span>
+      <nav class="footer__legal" aria-label="Legal">
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/accessibility.html">Accessibility</a>
+        <a href="https://github.com/BigAirHeatandAC/openverba/blob/main/LICENSE" target="_blank" rel="noopener">License (MIT)</a>
+        <a href="https://github.com/BigAirHeatandAC/openverba" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

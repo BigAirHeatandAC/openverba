@@ -1,0 +1,120 @@
+# =============================================================================
+# VoiceFlow Release -- build the Windows installer and publish it to a GitHub
+# Release when a version tag is pushed (e.g. `git tag v1.0.0 && git push --tags`).
+#
+# WHY WINDOWS-ONLY (for now)
+# --------------------------
+# PyInstaller CANNOT cross-compile: each OS's frozen binary must be built on a
+# native runner of that OS. This workflow currently ships the Windows artifact
+# only, because that is the verified, end-to-end-tested target.
+#
+#   FUTURE LEGS (not built here yet):
+#     * macOS  -> dist/VoiceFlow.app -> codesign + notarytool + staple -> .dmg
+#                 (needs a `macos-latest` job + Apple Developer ID secrets)
+#     * Linux  -> dist/VoiceFlow -> AppImage
+#                 (needs an `ubuntu-*` job + packaging/linux/build_appimage.sh)
+#   The shared packaging/voiceflow.spec is already cross-platform, so adding
+#   those legs is mostly a matter of adding matrix entries + the per-OS
+#   sign/package steps. They are intentionally left out to keep this honest:
+#   only what is actually produced and tested gets published.
+#
+# HONEST LIMITS:
+#   * The build runner is CPU-ONLY (no NVIDIA GPU). The installer is built
+#     CPU-only ON PURPOSE: requirements.txt has NO torch / NO nvidia-*-gpu
+#     wheels, and packaging/voiceflow.spec additionally excludes the `nvidia`
+#     namespace + torch, so the multi-GB CUDA runtime can never be packed. GPU
+#     acceleration is fetched on demand by the app when the user opts in.
+#   * This workflow does NOT code-sign the installer. Unsigned Windows installers
+#     trip SmartScreen ("unknown publisher"). Add an Authenticode / Azure Trusted
+#     Signing step before wide distribution.
+# =============================================================================
+name: release
+
+on:
+  push:
+    tags: ["v*"]          # publish a release on a version tag
+  workflow_dispatch: {}   # also allow a manual run (builds, but only a tag publishes)
+
+permissions:
+  contents: write         # needed to create/upload the GitHub Release
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false   # never cancel a half-published release
+
+jobs:
+  build-windows:
+    name: Build Windows installer
+    # MUST be a Windows runner -- PyInstaller + Inno Setup are Windows-native and
+    # cannot cross-compile. ISCC (the Inno Setup compiler) is preinstalled on the
+    # GitHub-hosted windows-latest image.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # the validated build interpreter (requirements.txt)
+          cache: pip
+
+      # CPU-only install. requirements.txt is pinned to the validated versions and
+      # deliberately carries NO torch / NO nvidia-*-gpu wheels, so PyInstaller can
+      # never pack the CUDA runtime. We add PyInstaller (the build tool) and do an
+      # editable install so the 'voiceflow' src/ package imports by name during the
+      # freeze. (Mirrors scripts/build.bat steps 1-2.)
+      - name: Install CPU-only runtime deps + PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+          pip install -e .
+
+      # Read the single source of truth for the version (src/voiceflow/__init__.py)
+      # and expose it for the installer filename. Mirrors build.bat's VF_VER step.
+      - name: Resolve app version
+        id: ver
+        shell: bash
+        run: echo "version=$(python -c 'import voiceflow,sys; sys.stdout.write(voiceflow.__version__)')" >> "$GITHUB_OUTPUT"
+
+      # Freeze the app: onedir, windowed (no console). Produces
+      # dist/VoiceFlow/VoiceFlow.exe. (build.bat step 3.)
+      - name: Build app with PyInstaller (onedir, CPU-only)
+        run: python -m PyInstaller --noconfirm --clean packaging/voiceflow.spec
+
+      - name: Sanity-check the frozen app exists
+        shell: bash
+        run: test -f dist/VoiceFlow/VoiceFlow.exe || (echo "PyInstaller did not produce dist/VoiceFlow/VoiceFlow.exe" && exit 1)
+
+      # Compile the per-user installer with Inno Setup. ISCC is on PATH on the
+      # windows-latest image. We pass the version in the same way build.bat does
+      # (/DMyAppVersion). Output -> dist/OpenVerba-Setup-<version>.exe
+      # (installer.iss: OutputDir=..\dist, OutputBaseFilename=OpenVerba-Setup-{#MyAppVersion}).
+      - name: Compile Inno Setup installer
+        run: ISCC /DMyAppVersion=${{ steps.ver.outputs.version }} packaging\installer.iss
+
+      - name: Sanity-check the installer exists
+        shell: bash
+        run: test -f "dist/OpenVerba-Setup-${{ steps.ver.outputs.version }}.exe" || (echo "Inno Setup did not produce the installer" && exit 1)
+
+      # Keep the installer as a build artifact even on non-tag (manual) runs, so a
+      # workflow_dispatch run is still useful for smoke-testing the build.
+      - name: Upload installer as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenVerba-Setup-windows-x64
+          path: dist/OpenVerba-Setup-*.exe
+          if-no-files-found: error
+
+      # Publish the GitHub Release with the installer attached -- ONLY on a v* tag.
+      # softprops/action-gh-release creates (or updates) the release for this tag
+      # and uploads the .exe as a downloadable asset.
+      - name: Publish GitHub Release with installer
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/OpenVerba-Setup-*.exe
+          generate_release_notes: true
+          # Mark as a draft=false, prerelease auto-detected from the tag name
+          # (e.g. v1.0.0-rc1). Edit here if you want manual review before publish.
+          fail_on_unmatched_files: true
